@@ -83,9 +83,60 @@ export default function App() {
       <header className="topbar">
         <div className="topbar-inner">
           <h1>广场人工预算审核</h1>
-          <p>收入锁定。审核人数、人效、元效和人工成本占比。</p>
+          <p>先看模型，再套一个广场的 27 年预算。</p>
         </div>
       </header>
+      <section className="model" id="model" data-testid="model">
+        <h2>模型</h2>
+        <p className="model-lead">审的是一个广场的 27 年人工预算。收入不能拿来凑数，人数才是要定的量。</p>
+        <div className="model-grid">
+          <article>
+            <h3>1. 锁定和可动</h3>
+            <ul>
+              <li>不变量：全口径收入 R，NOI。</li>
+              <li>可变量：自有人数 N，按条线拆开；外包人数；人工成本 C。</li>
+              <li>条线：招商、营运、推广、客服、物业工程、财务、人事行政。</li>
+            </ul>
+          </article>
+          <article>
+            <h3>2. 四个数怎么互推</h3>
+            <ul>
+              <li>人效 = R / N，所以 N = R / 人效。</li>
+              <li>人工成本占比 = C / R。</li>
+              <li>元效 = R / C。</li>
+              <li>人均成本 = C / N。只定人数或人效，还得不出元效。人均成本没有单列时，用 2026 年实际的 C / N。</li>
+            </ul>
+          </article>
+          <article>
+            <h3>3. 三条标尺</h3>
+            <ul>
+              <li>族群人效，定总人数。建议人数 = R / 族群人效中位数。人效 P75 对应人数下沿，人效 P25 对应人数上沿。</li>
+              <li>G1–G5 常模，定各条线结构。它是终极目标，不是今年必须一步砍到的数。</li>
+              <li>经营底线，是硬下限。某一条线、自有合计或外包低于底线，就是压降过度。低收益广场也守这条，收入低不等于可以把人减到开不了业。</li>
+            </ul>
+          </article>
+          <article>
+            <h3>4. 建议值怎么落</h3>
+            <ul>
+              <li>建议总人数 = max(经营底线合计, R / 族群人效中位数)。</li>
+              <li>再按该等级常模的比例分到各条线，每一条不低于自己的底线。</li>
+              <li>建议人工成本 = 建议人数 × 2026 年人均成本。占比和元效跟着这组人数和成本出来。</li>
+            </ul>
+          </article>
+        </div>
+        <h3>5. 结论按这个顺序下</h3>
+        <ol className="rules">
+          <li>没有 2027 全口径收入，或没有族群人效中位数：信息不足。</li>
+          <li>任一条线、自有合计或外包低于底线：压降过度，支撑不了 27 年经营。</li>
+          <li>人数高于族群区间上沿：人数偏高。</li>
+          <li>人数在族群区间内，但条线偏离常模：总数可留，结构要调整。</li>
+          <li>人数低于族群下沿，但仍不低于底线：偏紧，不要再压。</li>
+          <li>其余：落在合理区间。</li>
+        </ol>
+        <p className="sources">
+          25 年、26 年的实际人数、收入和人工成本用来对照。收入没有大幅下跌时，人数不应腰斩。族群人效、常模和底线都用你们自己的数。公开口径只用来对齐定义：中国百货商业协会 T/CCAGM 004—2021 的人均营业收入和人工费用率。G1–G5 没有公开的统一国家标准。
+        </p>
+      </section>
       <main className="layout">
         <section className="result" data-testid="review">
           <p className={`verdict verdict-${review.verdict}`} data-testid="verdict">
@@ -195,7 +246,7 @@ export default function App() {
               恢复示例
             </button>
           </div>
-          <p className="hint">示例·城南广场不是真实项目。换上一个广场的 27 年预算后，上面的结论会跟着变。</p>
+          <p className="hint">示例·城南广场不是真实项目。模型在上面。换上一个广场的 27 年预算后，左边的结论会跟着变。</p>
           <label className="field">
             <span>广场名称</span>
             <input value={plaza.name} onChange={(event) => patch({ name: event.target.value })} />
